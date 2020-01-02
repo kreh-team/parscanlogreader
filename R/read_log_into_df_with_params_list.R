@@ -37,14 +37,17 @@ read_log_into_df_with_params_list <- function(file, params_list, numeric_params)
   # Transform vector of strings into data frame
   df <- data.frame(as.list(clean_lines)) %>%
     t() %>%
-    as_tibble() %>%
+    dplyr::as_tibble() %>%
     tibble::remove_rownames()
 
   # Separate single column into desired columns
   df <- df %>%
     tidyr::separate(V1, c("run", "params", "epoch", "step", "eta", "loss", "accuracy"), sep = "-") %>%
     tidyr::separate(params, params_list, sep = ", ") %>%
-    dplyr::mutate_at(vars(params_list), function(x) stringr::str_split(x, "=", simplify = TRUE)[, 2]) %>%
+    dplyr::mutate_at(
+      dplyr::vars(params_list),
+      function(x) stringr::str_split(x, "=", simplify = TRUE)[, 2]
+    ) %>%
     dplyr::mutate_at(
       numeric_params,
       as.numeric

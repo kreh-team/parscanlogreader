@@ -11,12 +11,12 @@ clean_log_df_with_params <- function(data) {
 
   # Change data types and remove useless column
   data <- data %>%
-    mutate(
+    dplyr::mutate(
       run = as.numeric(run),
       loss = as.numeric(loss),
       accuracy = as.numeric(accuracy)
     ) %>%
-    select(-eta)
+    dplyr::select(-eta)
 
   return(data)
 }
