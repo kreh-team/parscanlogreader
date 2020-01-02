@@ -1,3 +1,13 @@
+#' Title
+#'
+#' @param file
+#' @param params_list
+#' @param numeric_params
+#'
+#' @return
+#' @export
+#'
+#' @importFrom rlang .data
 read_log_into_df_with_params_list <- function(file, params_list, numeric_params) {
   # Filter needed info from raw log, store in a vector of strings
   # lines <- system(paste("grep -E 'loss:.*acc:|Epoch'", file), intern = TRUE)
@@ -42,8 +52,16 @@ read_log_into_df_with_params_list <- function(file, params_list, numeric_params)
 
   # Separate single column into desired columns
   df <- df %>%
-    tidyr::separate(V1, c("run", "params", "epoch", "step", "eta", "loss", "accuracy"), sep = "-") %>%
-    tidyr::separate(params, params_list, sep = ", ") %>%
+    tidyr::separate(
+      .data$V1,
+      c("run", "params", "epoch", "step", "eta", "loss", "accuracy"),
+      sep = "-"
+    ) %>%
+    tidyr::separate(
+      .data$params,
+      params_list,
+      sep = ", "
+    ) %>%
     dplyr::mutate_at(
       dplyr::vars(params_list),
       function(x) stringr::str_split(x, "=", simplify = TRUE)[, 2]
