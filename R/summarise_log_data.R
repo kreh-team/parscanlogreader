@@ -2,12 +2,14 @@
 #'
 #' @param data Clean log data frame
 #' @param params_list Manual list of parameters
+#' @param runs_per_model Runs per model
+#' @param max_runs Maximum number of runs
 #'
 #' @return Log summary data frame
 #' @export
 #'
 #' @importFrom rlang .data
-summarise_log_data <- function(data, params_list) {
+summarise_log_data <- function(data, params_list, runs_per_model, max_runs = 1000) {
   data <- data %>%
     # Get last step of each single run
     dplyr::group_by_at(
@@ -16,8 +18,8 @@ summarise_log_data <- function(data, params_list) {
     dplyr::slice(dplyr::n()) %>%
     # Divide epoch into current and max epoch
     dplyr::mutate(
-      curr_epoch = stringr::str_split(.data$epoch, "/") %>% unlist %>% .[1] %>% as.numeric(),
-      max_epoch = stringr::str_split(.data$epoch, "/") %>% unlist %>% .[2] %>% as.numeric(),
+      curr_epoch = stringr::str_split(.data$epoch, "/") %>% unlist() %>% .[1] %>% as.numeric(),
+      max_epoch = stringr::str_split(.data$epoch, "/") %>% unlist() %>% .[2] %>% as.numeric(),
     ) %>%
     dplyr::ungroup() %>%
     # Get final loss/accuracy of each epoch
@@ -28,7 +30,11 @@ summarise_log_data <- function(data, params_list) {
     # Create model variable (5 runs)
     tibble::rowid_to_column(var = "run") %>%
     dplyr::mutate(
-      model = cut(.data$run, breaks = seq(0, 1000, 5), label = 1:200)
+      model = cut(
+        x = .data$run,
+        breaks = seq(0, max_runs, runs_per_model),
+        label = 1:as.numeric(max_runs / runs_per_model)
+      )
     ) %>%
     dplyr::select(-.data$run) %>%
     # Summarise results
