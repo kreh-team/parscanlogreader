@@ -1,13 +1,13 @@
-#' Title
+#' Summarise clean log data frame
 #'
-#' @param data
-#' @param params_list
+#' @param data Clean log data frame
+#' @param params_list Manual list of parameters
 #'
-#' @return
+#' @return Log summary data frame
 #' @export
 #'
 #' @importFrom rlang .data
-summarise_log_data_with_params_list <- function(data, params_list) {
+summarise_log_data <- function(data, params_list) {
   data <- data %>%
     # Get last step of each single run
     dplyr::group_by_at(

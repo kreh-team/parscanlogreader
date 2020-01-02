@@ -1,14 +1,14 @@
-#' Title
+#' Read raw log file
 #'
-#' @param file
-#' @param params_list
-#' @param numeric_params
+#' @param file Input log file
+#' @param params_list Manual list of parameters
+#' @param numeric_params List of numeric parameters
 #'
-#' @return
+#' @return Raw log data frame
 #' @export
 #'
 #' @importFrom rlang .data
-read_log_into_df_with_params_list <- function(file, params_list, numeric_params) {
+read_raw_log <- function(file, params_list, numeric_params) {
   # Filter needed info from raw log, store in a vector of strings
   # lines <- system(paste("grep -E 'loss:.*acc:|Epoch'", file), intern = TRUE)
   # lines <- system(paste("grep -E 'loss:.*acc:|Epoch|\\[CV\\]'", file, "| grep -v 'total'"), intern = TRUE)

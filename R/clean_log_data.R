@@ -1,12 +1,12 @@
-#' Title
+#' Clean raw log data frame
 #'
-#' @param data
+#' @param data Raw log data frame
 #'
-#' @return
+#' @return Clean log data frame
 #' @export
 #'
 #' @importFrom rlang .data
-clean_log_df_with_params <- function(data) {
+clean_log_data <- function(data) {
 
   # Use regex for getting the relevant content of each raw column
   data <- data %>%
