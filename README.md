@@ -1,5 +1,5 @@
 
-# parscanlogreader <!-- <img src="man/figures/logo.png" align="right" width="120" /> -->
+# parscanlogreader <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
 
@@ -31,20 +31,24 @@ src_numeric_params <- c(
 
 ``` r
 log_data_raw <- src_file %>%
-  read_log_into_df_with_params_list(
+  read_raw_log(
     params_list = src_params_list, 
     numeric_params = src_numeric_params
   ) %>%
-  clean_log_df_with_params()
+  clean_log_data()
 
 log_data <- log_data_raw %>%
   tidyr::drop_na() %>%
-  summarise_log_data_with_params_list(
-    params_list = src_params_list
+  summarise_log_data(
+    params_list = src_params_list,
     runs_per_model = 5, 
     max_runs = 1000
   )
 ```
+
+Note that we use `epochs_raw` instead of `epochs` on the parameters
+lists. This is because internally we calculate/parse another `epochs`
+variable. This will be improved in future versions.
 
 ## Installation
 
