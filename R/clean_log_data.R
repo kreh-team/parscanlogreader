@@ -24,7 +24,7 @@ clean_log_data <- function(data) {
       loss = as.numeric(.data$loss),
       accuracy = as.numeric(.data$accuracy)
     ) %>%
-    dplyr::select(-.data$eta)
+    dplyr::select(-.data$eta, -.data$epochs_raw)
 
   return(data)
 }
