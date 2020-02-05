@@ -4,16 +4,21 @@
 \alias{summarise_log_data}
 \title{Summarise clean log data frame}
 \usage{
-summarise_log_data(data, params_list, runs_per_model, max_runs = 1000)
+summarise_log_data(
+  data,
+  params_list = NULL,
+  num_folds = NULL,
+  num_models = NULL
+)
 }
 \arguments{
 \item{data}{Clean log data frame}
 
-\item{params_list}{Manual list of parameters}
+\item{params_list}{Manual list of parameters (optional)}
 
-\item{runs_per_model}{Runs per model}
+\item{num_folds}{Number of folds per model/candidate (optional)}
 
-\item{max_runs}{Maximum number of runs}
+\item{num_models}{Number of models/candidates (optional)}
 }
 \value{
 Log summary data frame
