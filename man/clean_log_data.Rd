@@ -4,10 +4,12 @@
 \alias{clean_log_data}
 \title{Clean raw log data frame}
 \usage{
-clean_log_data(data)
+clean_log_data(data, drop_na = FALSE)
 }
 \arguments{
 \item{data}{Raw log data frame}
+
+\item{drop_na}{Drop rows containing missing values}
 }
 \value{
 Clean log data frame
