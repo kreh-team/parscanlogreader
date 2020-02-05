@@ -4,14 +4,14 @@
 \alias{read_raw_log}
 \title{Read raw log file}
 \usage{
-read_raw_log(file, params_list, numeric_params)
+read_raw_log(file, params_list = NULL, numeric_params = NULL)
 }
 \arguments{
 \item{file}{Input log file}
 
-\item{params_list}{Manual list of parameters}
+\item{params_list}{Manual list of parameters (optional)}
 
-\item{numeric_params}{List of numeric parameters}
+\item{numeric_params}{List of numeric parameters (optional)}
 }
 \value{
 Raw log data frame

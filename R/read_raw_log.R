@@ -31,6 +31,34 @@ read_raw_log <- function(file, params_list = NULL, numeric_params = NULL) {
   # Filter needed info from raw log, store in a vector of strings
   lines <- system(paste("cat ", file, " | tr -d '\\000' | grep -E 'loss:.*acc:|Epoch|\\[CV\\]' | grep -v 'total'"), intern = TRUE)
 
+  # Parse parameters list and and list of numeric parameters
+  if (is.null(params_list)) {
+    raw_params <- grep("\\[CV\\]", lines, value = TRUE)[1]
+
+    raw_params <- raw_params %>%
+      # Remove [CV] tag and whitespaces
+      stringr::str_remove_all("\\[CV\\]") %>%
+      stringr::str_remove_all(" ") %>%
+      # Separate parameters
+      stringr::str_split(pattern = "\\,") %>%
+      unlist() %>%
+      # Separate names from values
+      stringr::str_split(pattern = "=")
+
+    params_list <- raw_params %>%
+      unlist() %>%
+      .[c(TRUE, FALSE)]
+
+    # Parse numeric parameters if not specified
+    if (is.null(numeric_params)) {
+      params_values <- raw_params %>%
+        unlist() %>%
+        .[c(FALSE, TRUE)]
+
+      numeric_params <- params_list[which(!is.na(as.numeric(gsub("[[:alpha:]]", "", params_values))))]
+    }
+  }
+
   # Calculate size of vector
   num_lines <- length(lines)
   num_headers <- grep("Epoch", lines) %>% length()
