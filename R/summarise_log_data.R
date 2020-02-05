@@ -35,15 +35,15 @@ summarise_log_data <- function(data, params_list = NULL, num_folds = NULL, num_m
     ) %>%
     dplyr::slice(dplyr::n()) %>%
     # Divide epoch column into current and max epoch
-    dplyr::mutate(
-      curr_epoch = stringr::str_split(.data$epoch, "/") %>%
-        unlist() %>%
-        .[1] %>%
-        as.numeric(),
-      max_epoch = stringr::str_split(.data$epoch, "/") %>%
-        unlist() %>%
-        .[2] %>%
-        as.numeric(),
+    tidyr::separate(
+      col = .data$epoch,
+      into = c("curr_epoch", "max_epoch"),
+      sep = "/",
+      remove = FALSE
+    ) %>%
+    dplyr::mutate_at(
+      .vars = dplyr::vars(.data$curr_epoch, .data$max_epoch),
+      .funs = as.numeric
     ) %>%
     dplyr::ungroup() %>%
     # Get final loss/accuracy of each epoch
