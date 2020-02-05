@@ -1,17 +1,34 @@
 #' Read raw log file
 #'
 #' @param file Input log file
-#' @param params_list Manual list of parameters
-#' @param numeric_params List of numeric parameters
+#' @param params_list Manual list of parameters (optional)
+#' @param numeric_params List of numeric parameters (optional)
 #'
 #' @return Raw log data frame
 #' @export
 #'
 #' @importFrom rlang .data
-read_raw_log <- function(file, params_list, numeric_params) {
+read_raw_log <- function(file, params_list = NULL, numeric_params = NULL) {
+
+  # Read settings of the search on hyper parameters
+  search_settings_raw <- system(paste("grep -E ^Fitting.*folds.*candidates.*fits$", file), intern = TRUE) %>%
+    stringr::str_split(" ") %>%
+    unlist() %>%
+    stringr::str_remove_all("\\,")
+
+  # Names of the settings parameters
+  search_settings_names <- search_settings_raw %>%
+    .[c(3, 8, 11)] %>%
+    paste0("num_", .) %>%
+    stringr::str_replace_all("candidate", "model")
+
+  # Names vector of settings parameters values
+  search_settings <- search_settings_raw %>%
+    .[c(2, 7, 10)] %>%
+    as.numeric() %>%
+    `names<-`(search_settings_names)
+
   # Filter needed info from raw log, store in a vector of strings
-  # lines <- system(paste("grep -E 'loss:.*acc:|Epoch'", file), intern = TRUE)
-  # lines <- system(paste("grep -E 'loss:.*acc:|Epoch|\\[CV\\]'", file, "| grep -v 'total'"), intern = TRUE)
   lines <- system(paste("cat ", file, " | tr -d '\\000' | grep -E 'loss:.*acc:|Epoch|\\[CV\\]' | grep -v 'total'"), intern = TRUE)
 
   # Calculate size of vector
@@ -45,31 +62,37 @@ read_raw_log <- function(file, params_list, numeric_params) {
   }
 
   # Transform vector of strings into data frame
-  df <- data.frame(as.list(clean_lines)) %>%
+  data <- data.frame(as.list(clean_lines)) %>%
     t() %>%
     dplyr::as_tibble() %>%
     tibble::remove_rownames()
 
   # Separate single column into desired columns
-  df <- df %>%
+  data <- data %>%
+    # Separate raw data into main columns
     tidyr::separate(
       .data$V1,
       c("run", "params", "epoch", "step", "eta", "loss", "accuracy"),
       sep = "-"
     ) %>%
+    # Separate params column into individual parameters
     tidyr::separate(
-      .data$params,
-      params_list,
+      col = .data$params,
+      into = params_list,
       sep = ", "
     ) %>%
+    # Select values of parameters and make sure they are numeric
     dplyr::mutate_at(
-      dplyr::vars(params_list),
-      function(x) stringr::str_split(x, "=", simplify = TRUE)[, 2]
+      .vars = dplyr::vars(params_list),
+      .funs = function(x) stringr::str_split(x, "=", simplify = TRUE)[, 2]
     ) %>%
     dplyr::mutate_at(
-      numeric_params,
-      as.numeric
+      .vars = dplyr::vars(numeric_params),
+      .funs = as.numeric
     )
 
-  return(df)
+  # Set search settings attribute
+  base::attr(data, "search_settings") <- search_settings
+
+  return(data)
 }
