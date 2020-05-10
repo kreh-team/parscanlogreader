@@ -1,8 +1,12 @@
 
-# parscanlogreader <img src="man/figures/logo.png" align="right" width="120" />
+# parscanlogreader <img src="man/figures/logo.png" align="right" width="120"/>
 
 <!-- badges: start -->
 
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/parscanlogreader)](https://cran.r-project.org/package=parscanlogreader)
+[![pkgdown Workflow
+Status](https://github.com/kreh-team/parscanlogreader/workflows/pkgdown/badge.svg)](https://kreh-team.github.io/parscanlogreader/)
 <!-- badges: end -->
 
 ## Overview
@@ -10,6 +14,25 @@
 The goal of parscanlogreader is to read and process raw log files from
 Scikit-learn’s
 [RandomizedSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html).
+
+## Installation
+
+<!-- You can install the released version of parscanlogreader from [CRAN](https://CRAN.R-project.org) with: -->
+
+<!-- ``` r -->
+
+<!-- install.packages("parscanlogreader") -->
+
+<!-- ``` -->
+
+<!-- And  -->
+
+The development version can be installed from
+[GitHub](https://github.com/) with:
+
+``` r
+devtools::install_github("kreh-team/parscanlogreader")
+```
 
 ## Examples
 
@@ -68,23 +91,4 @@ log_data <- log_data_raw %>%
     num_folds = 5, 
     num_models = 50
   )
-```
-
-## Installation
-
-<!-- You can install the released version of parscanlogreader from [CRAN](https://CRAN.R-project.org) with: -->
-
-<!-- ``` r -->
-
-<!-- install.packages("parscanlogreader") -->
-
-<!-- ``` -->
-
-<!-- And  -->
-
-The development version from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("kreh-team/parscanlogreader")
 ```
